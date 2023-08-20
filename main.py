@@ -20,7 +20,6 @@ logging.basicConfig(
     format='%(asctime)s %(levelname)s %(message)s'
 )
 
-main = Flask(__name__)
 
 load_dotenv('.env')
 
@@ -78,7 +77,7 @@ def main():
                     price_min = df_tickers['price'].min()
                     price_max = df_tickers['price'].max()
                     spread = round(((price_max - price_min)/ price_min) * 100, 3)
-                    if spread:
+                    if spread >= 10:
                         """Возвращаем в виде фреймов строки с 
                         "price" == price_max и "price" == price_min"""
                         df_min = df_tickers[df_tickers['price'] == price_min]
@@ -107,7 +106,7 @@ def main():
                         
                         return_dict['spread'] = spread
 
-                        return_str = (f"Актив: {return_dict['coin']}\TUSD\
+                        return_str = (f"Актив: {return_dict['coin']}\\USDT\
                                       Дата: {return_dict['datetime']}\
                                      Біржа1: {return_dict['pr_min_exchange']}\
                                      Об'єм: {return_dict['ex_min_volume']}\
@@ -118,7 +117,7 @@ def main():
                                      Об'єм: {return_dict['ex_max_volume']}\
                                      Вартість: {return_dict['price_max']}\
                                      Посилання: {return_dict['pr_max_link']}\
-                                     Спред {return_dict['spread']}")
+                                     Спред: {return_dict['spread']}")
                         
                         """Добавляем строку в список new_data"""
                         new_data.append(return_str)
@@ -158,4 +157,3 @@ bot_thread = threading.Thread(target=bot_polling)
 main_thread.start()
 send_data_thread.start()
 bot_thread.start()
-

@@ -25,8 +25,8 @@ def sorting_coins(data, coin_id):
                     dct = {}  # создаем промежуточный словарь
                     dct['coin_id'] = coin_id
                     dct['target_coin_id'] = target_coin_id
-                    dct['price'] = price
-                    dct['volume'] = volume
+                    dct['price'] = round(price, 6)
+                    dct['volume'] = round(volume, 4)
                     dct['exchange'] = exchange
                     dct['datetime'] = (datetime.now()).strftime('%d-%m-%Y %H:%M:%S')
                     dct['link_tickers'] = link_tickers
