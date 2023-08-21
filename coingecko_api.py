@@ -17,10 +17,10 @@ COINGECKO_API_TOKEN = os.environ.get('COINGECKO_API_TOKEN', '')
 
 
 
-def get_data(coin_identifier: str):
+def get_data(coin_identifier: str, page: int):
     """функция получения данных о монете с API Coingecko"""
     # endpoint = f"coins/{coin_identifier}/tickers?exchange_ids=all"
-    endpoint = f"coins/{coin_identifier}/tickers"
+    endpoint = f"coins/{coin_identifier}/tickers?page={page}"
     headers = {
         'accept': 'application/json',
     }
@@ -28,6 +28,8 @@ def get_data(coin_identifier: str):
         response = requests.get(COINGECKO_API_TOKEN + endpoint, headers=headers)
         if response.status_code == 200:
             data = json.loads(response.text)
+            headers = response.headers # response headers
+            print(headers['total']) # count total
             return data
                   
         else:

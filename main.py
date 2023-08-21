@@ -44,7 +44,6 @@ def main():
     """Загружаем все монеты в DataFrame df_coins, 752 монеты"""
     df_coins = pd.read_csv('coins_list_752.csv', index_col='num')
     logging.info(f'В базе всего {len(df_coins)} монет')
-    number_cycle = 1 # проверить присвоение !!!!!!!!!
     while True:
         id_coin= 1
     
@@ -61,10 +60,13 @@ def main():
                                                 'volume',
                                                 'exchange',
                                                 'link_tickers'])
-            
-            data = get_data(coin_id) # Получаем данные о монете с API coingecko
+            page = 1
+            data = get_data(coin_id, page) # Получаем данные о монете с API coingecko
             if data is not None:
                 logging.info(f'COIN {coin_name} DATA is TRUE')
+
+                print(coin_name) #   !!!!!!!!!!!!!!!!!!!!!!!!!!
+                
                 """Сортируем данные в список словарей"""
                 lst_tickers = sorting_coins(data, coin_id)
 
@@ -93,31 +95,30 @@ def main():
 
 
                         return_dict['pr_min_exchange'] = df_min.iloc[0]['exchange']
-                        return_dict['ex_min_volume'] = df_min.iloc[0]['volume']
+                        return_dict['ex_min_volume'] = df_min.iloc[0]['volume_base']
+                        return_dict['ex_min_volume_usd'] = df_min.iloc[0]['volume_usd']
                         return_dict['price_min'] = price_min
                         return_dict['pr_min_link'] = df_min.iloc[0]['link_tickers']
                         
                         
                         return_dict['pr_max_exchange'] = df_max.iloc[0]['exchange']
-                        return_dict['ex_max_volume'] = df_max.iloc[0]['volume']
+                        return_dict['ex_max_volume'] = df_max.iloc[0]['volume_base']
+                        return_dict['ex_max_volume_usd'] = df_max.iloc[0]['volume_usd']
                         return_dict['price_max'] = price_max
                         return_dict['pr_max_link'] = df_max.iloc[0]['link_tickers']
                         
                         
-                        return_dict['spread'] = spread
+                        return_dict['spread'] = round(spread, 2)
 
                         return_str = (f"Актив: {return_dict['coin']}\\USDT\
-                                      Дата: {return_dict['datetime']}\
-                                     Біржа1: {return_dict['pr_min_exchange']}\
-                                     Об'єм: {return_dict['ex_min_volume']}\
-                                     Вартість: {return_dict['price_min']}\
+                                      {return_dict['datetime']}\
+                                     Біржа1: {return_dict['pr_min_exchange']}\nОб'єм: {return_dict['ex_min_volume']} --> {return_dict['ex_min_volume_usd']}USD\
+                                     Ціна: {return_dict['price_min']} USDT\
                                      Посилання: {return_dict['pr_min_link']}\n\
                                     \
-                                     Біржа2: {return_dict['pr_max_exchange']}\
-                                     Об'єм: {return_dict['ex_max_volume']}\
-                                     Вартість: {return_dict['price_max']}\
-                                     Посилання: {return_dict['pr_max_link']}\
-                                     Спред: {return_dict['spread']}")
+                                     Біржа2: {return_dict['pr_max_exchange']}\nОб'єм: {return_dict['ex_max_volume']} --> {return_dict['ex_max_volume_usd']}USD\
+                                     Ціна: {return_dict['price_max']} USDT\
+                                     Посилання: {return_dict['pr_max_link']}\nСпред: {return_dict['spread']}%")
                         
                         """Добавляем строку в список new_data"""
                         new_data.append(return_str)
@@ -141,7 +142,7 @@ def send_data():
         if new_data:
             data_to_send = new_data.pop(0)
             for user_id in subscribed_users:
-                bot.send_message(user_id, f"Нові данні: {data_to_send}")
+                bot.send_message(user_id, str(data_to_send))
         sleep(2)  # Пауза между проверками новых данных
 
 

@@ -19,14 +19,16 @@ def sorting_coins(data, coin_id):
                 target_coin_id = item['target_coin_id']
                 coin_id_coingecko = item['coin_id']
                 if coin_id_coingecko == coin_id and target_coin_id == 'tether':
-                    price = item['last']   
+                    price = item['last'] 
+                    volume_usd = item['converted_volume']['usd'] 
                     exchange = item['market']['name']
                     link_tickers = item['trade_url']
                     dct = {}  # создаем промежуточный словарь
                     dct['coin_id'] = coin_id
                     dct['target_coin_id'] = target_coin_id
                     dct['price'] = round(price, 6)
-                    dct['volume'] = round(volume, 4)
+                    dct['volume_base'] = round(volume, 2)
+                    dct['volume_usd'] = round(volume_usd, 2)
                     dct['exchange'] = exchange
                     dct['datetime'] = (datetime.now()).strftime('%d-%m-%Y %H:%M:%S')
                     dct['link_tickers'] = link_tickers
