@@ -41,3 +41,4 @@ def get_data(coin_identifier: str, page: int):
         logging.info("Ошибка при выполнении запроса:", e)
         return None
 
+

@@ -1,0 +1,168 @@
+num,id,chain_identifier,name,shortname
+0,,,Picasso,
+1,factom,,Factom,
+2,ethereum,1.0,Ethereum,
+3,findora,,Findora,
+4,klay-token,,Klaytn,
+5,theta,361.0,Theta,
+6,vite,,Vite,
+7,bittorrent,199.0,BitTorrent,
+8,kusama,,Kusama,
+9,iotex,,IoTeX,iotex
+10,bitkub-chain,96.0,Bitkub Chain,
+11,komodo,,Komodo,
+12,kujira,,Kujira,
+13,algorand,,Algorand,
+14,huobi-token,128.0,Huobi ECO Chain Mainnet,HECO
+15,ethereum-classic,,Ethereum Classic,
+16,polis-chain,333999.0,Polis Chain,
+17,eos,,EOS,
+18,stellar,,Stellar,
+19,proof-of-memes,,Proof of Memes,
+20,counterparty,,Counterparty,
+21,telos,,Telos,
+22,bitshares,,BitShares,
+23,hoo,,Hoo,Hoo
+24,icon,,ICON,
+25,nem,,NEM,
+26,nuls,,Nuls,
+27,neo,,NEO,
+28,tezos,,Tezos,
+29,mixin-network,,Mixin Network,
+30,super-zero,,Sero,
+31,yocoin,,Yocoin,yocoin
+32,defichain,,DeFiChain,
+33,xdai,100.0,Gnosis Chain,
+34,rollux,,Rollux,
+35,boba,288.0,Boba Network,
+36,the-open-network,,The Open Network,TON
+37,polygon-pos,137.0,Polygon POS,MATIC
+38,lightlink,,LightLink,
+39,exosama,,Exosama,
+40,aurora,1313161554.0,Aurora,aurora
+41,opbnb,204.0,opBNB,
+42,aura-network,,Aura Network,
+43,bitgert,,Bitgert Chain,Bitgert Brise
+44,wemix-network,,Wemix Network,
+45,moonriver,1285.0,Moonriver,moonriver
+46,cronos,25.0,Cronos,CRO
+47,smartbch,10000.0,SmartBCH,
+48,tomochain,88.0,TomoChain,
+49,echelon,,Echelon,
+50,neon-evm,245022934.0,Neon EVM,
+51,elrond,,Elrond,elrond
+52,acala,,Acala,
+53,harmony-shard-0,1666600000.0,Harmony Shard 0,Harmony Shard 0
+54,defi-kingdoms-blockchain,,DFK Chain,DFK Chain
+55,evmos,9001.0,Evmos,evmos
+56,everscale,,Everscale,
+57,karura,,Karura,
+58,terra,,Terra Classic,
+59,ronin,,Ronin,ron
+60,sx-network,,SX Network,sxn
+61,cube,,Cube,
+62,sora,,Sora,
+63,elastos,,Elastos Smart Contract Chain,Elastos
+64,celo,42220.0,Celo,celo
+65,pulsechain,,Pulsechain,
+66,coinex-smart-chain,52.0,CoinEx Smart Chain,CSC
+67,moonbeam,1284.0,Moonbeam,
+68,songbird,,Songbird,
+69,avalanche,43114.0,Avalanche,AVAX
+70,astar,,Astar,
+71,hoo-smart-chain,70.0,Hoo Smart Chain,
+72,dogechain,,Dogechain,
+73,oasis,42262.0,Oasis,oasis
+74,sui,,Sui,
+75,flare-network,,Flare Network,
+76,ethereumpow,,EthereumPoW,
+77,xdc-network,50.0,XDC Network,xdc xinfin
+78,hedera-hashgraph,,Hedera Hashgraph,hashgraph
+79,rootstock,30.0,Rootstock RSK,
+80,stacks,,Stacks,
+81,callisto,,Callisto,
+82,function-x,530.0,Function X,
+83,redlight-chain,2611.0,Redlight Chain,
+84,shiden network,8545.0,Shiden Network,
+85,oasys,,Oasys,
+86,energi,,Energi,
+87,meter,82.0,Meter,
+88,syscoin,57.0,Syscoin NEVM,syscoin
+89,velas,106.0,Velas,velas
+90,okex-chain,66.0,OKExChain,OKEx
+91,onus,,ONUS,
+92,empire,3693.0,Empire,
+93,canto,7700.0,Canto,
+94,fuse,122.0,Fuse,
+95,tombchain,,Tombchain,
+96,core,,Core,
+97,solana,,Solana,
+98,,,Alephium,
+99,binance-smart-chain,56.0,BNB Smart Chain,BSC
+100,fantom,250.0,Fantom,
+101,polkadot,,Polkadot,
+102,ultron,1231.0,Ultron,
+103,kava,,Kava,
+104,kardiachain,,KardiaChain,kardiachain
+105,conflux,,Conflux,conflux
+106,kucoin-community-chain,321.0,Kucoin Community Chain,KCC
+107,step-network,,Step Network,
+108,eos-evm,17777.0,EOS EVM,
+109,tenet,1559.0,Tenet,
+110,aptos,,Aptos,
+111,thundercore,108.0,ThunderCore,
+112,nxt,,NXT,
+113,mdex,,Mdex,
+114,godwoken,,Godwoken,
+115,ordinals,,Ordinals,
+116,trustless-computer,,Trustless Computer,
+117,injective,,Injective,
+118,neutron,,Neutron,
+119,milkomeda-cardano,2001.0,Milkomeda (Cardano),
+120,cardano,,Cardano,
+121,terra-2,,Terra,
+122,fusion-network,,Fusion Network,fusion-network
+123,zilliqa,,Zilliqa,
+124,Bitcichain,,Bitcichain,Bitcichain
+125,gochain,,GoChain,
+126,cosmos,,Cosmos,
+127,achain,,Achain,
+128,omni,,Omni,
+129,enq-enecuum,,Enecuum,
+130,near-protocol,,Near Protocol,near-protocol
+131,,,Matrix,
+132,skale,,Skale,
+133,ShibChain,,ShibChain,
+134,,,Radix,
+135,tron,,TRON,
+136,libre,,Libre,
+137,metaverse-etp,,Metaverse ETP,
+138,waves,,Waves,
+139,ardor,,Ardor,
+140,stratis,,Stratis,
+141,openledger,,OpenLedger,
+142,qtum,,Qtum,
+143,bitcoin-cash,,Simple Ledger Protocol (Bitcoin Cash),SLP
+144,ontology,,Ontology,
+145,zksync,324.0,zkSync,
+146,polygon-zkevm,1101.0,Polygon zkEVM,
+147,metis-andromeda,1088.0,Metis Andromeda,
+148,arbitrum-nova,42170.0,Arbitrum Nova,
+149,mantle,5000.0,Mantle,
+150,arbitrum-one,42161.0,Arbitrum One,Arbitrum
+151,optimistic-ethereum,10.0,Optimism,Optimism
+152,linea,59144.0,Linea,
+153,base,8453.0,Base,
+154,vechain,,VeChain,
+155,wanchain,,Wanchain,
+156,celer-network,,Celer Network,Celer
+157,chiliz,,Chiliz,
+158,osmosis,,Osmosis,Osmo
+159,hydra,,Hydra,
+160,xrp,,XRP Ledger,xrp
+161,secret,,Secret,
+162,thorchain,,Thorchain,
+163,kadena,,Kadena,
+164,clover,,Clover,
+165,binancecoin,,BNB Beacon Chain,BEP2
+166,bifrost-kusama,,Bifrost Kusama,

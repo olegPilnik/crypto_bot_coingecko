@@ -110,15 +110,19 @@ def main():
                         
                         return_dict['spread'] = round(spread, 2)
 
-                        return_str = (f"Актив: {return_dict['coin']}\\USDT\
-                                      {return_dict['datetime']}\
-                                     Біржа1: {return_dict['pr_min_exchange']}\nОб'єм: {return_dict['ex_min_volume']} --> {return_dict['ex_min_volume_usd']}USD\
-                                     Ціна: {return_dict['price_min']} USDT\
-                                     Посилання: {return_dict['pr_min_link']}\n\
-                                    \
-                                     Біржа2: {return_dict['pr_max_exchange']}\nОб'єм: {return_dict['ex_max_volume']} --> {return_dict['ex_max_volume_usd']}USD\
-                                     Ціна: {return_dict['price_max']} USDT\
-                                     Посилання: {return_dict['pr_max_link']}\nСпред: {return_dict['spread']}%")
+                        return_str = (f"Біржи: {return_dict['pr_min_exchange']}\{return_dict['pr_max_exchange']}\n"
+                                      f"Актив: {return_dict['coin']}\\USDT\n"
+                                      f"{return_dict['datetime']}\n"
+                                      "\n\n"
+                                      f"Об'єм: {return_dict['ex_min_volume']} --> {return_dict['ex_min_volume_usd']}$\n"
+                                      f"Ціна: {return_dict['price_min']} USDT\n"
+                                      f"Посилання: {return_dict['pr_min_link']}\n"
+                                      "\n\n"
+                                      f"Об'єм: {return_dict['ex_max_volume']} --> {return_dict['ex_max_volume_usd']}$\n"
+                                      f"Ціна: {return_dict['price_max']} USDT\n"
+                                      f"Посилання: {return_dict['pr_max_link']}\n"
+                                      "\n\n"
+                                      f"Спред: {return_dict['spread']}%")
                         
                         """Добавляем строку в список new_data"""
                         new_data.append(return_str)
