@@ -17,10 +17,10 @@ COINGECKO_API_TOKEN = os.environ.get('COINGECKO_API_TOKEN', '')
 
 
 
-def get_data(coin_identifier: str, page: int):
+def get_data(coin_identifier: str):
     """функция получения данных о монете с API Coingecko"""
-    # endpoint = f"coins/{coin_identifier}/tickers?exchange_ids=all"
-    endpoint = f"coins/{coin_identifier}/tickers?page={page}"
+    # endpoint = f"coins/{coin_identifier}/tickers?exchange_ids={exchange_identifier}"
+    endpoint = f"coins/{coin_identifier}/tickers"
     headers = {
         'accept': 'application/json',
     }
@@ -28,8 +28,9 @@ def get_data(coin_identifier: str, page: int):
         response = requests.get(COINGECKO_API_TOKEN + endpoint, headers=headers)
         if response.status_code == 200:
             data = json.loads(response.text)
-            headers = response.headers # response headers
-            print(headers['total']) # count total
+            # headers = response.headers # response headers
+            # print(headers['total']) # count total
+
             return data
                   
         else:
@@ -40,5 +41,6 @@ def get_data(coin_identifier: str, page: int):
     except requests.RequestException as e:
         logging.info("Ошибка при выполнении запроса:", e)
         return None
+
 
 
