@@ -31,6 +31,9 @@ new_data = []
 
 
 # Отслеживаем подписанных пользователей
+subscribed_users = [] 
+
+# Отслеживаем подписанных пользователей
 subscribed_users = set()    
 
 # Обработчик команды /start telebot
@@ -39,6 +42,8 @@ def subscribe(message):
     # Добавляем пользователя в список подписанных
     subscribed_users.add(message.chat.id)
     bot.send_message(message.chat.id, "Ви підписались на повідомлення про нові данні.")
+    
+
 
 
 
@@ -58,6 +63,9 @@ def main():
         while id_coin <= len(df_coins): # перебираем индексы от 1 до последнего в базе с монетами (752)
             coin_id = df_coins.loc[id_coin]['id'] #  записываем в переменную coin_id значение ключа id из списка
             coin_name = df_coins.loc[id_coin]['name']        #  записываем в переменную coin_name значение ключа name из базы
+            coin_symbol = df_coins.loc[id_coin]['symbol']
+
+            
             logging.info(f'Проверяю монету # {id_coin} : {coin_name}')
 
             exchange_id = df_exchanges.loc[1]['id']
@@ -86,14 +94,14 @@ def main():
                         """С помощью метода from_records добавляем список словарей в DataFrame df_tickers"""
                         df_tickers = pd.concat([df_tickers, pd.DataFrame.from_records(lst_tickers)], ignore_index=True)
                         # print(df_tickers)
-                        # df_tickers.to_csv(f'df_tickers{coin_name}.csv', index=True)
+                        # df_tickers.to_csv(f'df_tickers{coin_name}.csv', index=True)# temp!!!!
                     
                         """Возвращаю максисальную и минимальную цену монеты"""
                         price_min = df_tickers['price'].min()
                         price_max = df_tickers['price'].max()
                         spread = ((price_max - price_min)/ price_min) * 100
                         print(spread)
-                        if spread >= 8:
+                        if spread >= 8 and spread <= 30:
                             """Возвращаем в виде фреймов строки с 
                             "price" == price_max и "price" == price_min"""
                             df_min = df_tickers[df_tickers['price'] == price_min]
@@ -105,16 +113,12 @@ def main():
                             return_dict['coin'] = coin_name
                             return_dict['target_coin'] = df_min.iloc[0]['target_coin_id']
                             return_dict['datetime'] = df_min.iloc[0]['datetime']
-
-
-
                             return_dict['pr_min_exchange'] = df_min.iloc[0]['exchange']
                             return_dict['ex_min_volume'] = df_min.iloc[0]['volume_base']
                             return_dict['ex_min_volume_usd'] = df_min.iloc[0]['volume_usd']
                             return_dict['price_min'] = price_min
                             return_dict['pr_min_link'] = df_min.iloc[0]['link_tickers']
-                            
-                            
+                                                      
                             return_dict['pr_max_exchange'] = df_max.iloc[0]['exchange']
                             return_dict['ex_max_volume'] = df_max.iloc[0]['volume_base']
                             return_dict['ex_max_volume_usd'] = df_max.iloc[0]['volume_usd']
@@ -123,6 +127,17 @@ def main():
                             
                             
                             return_dict['spread'] = round(spread, 2)
+
+                            df = pd.DataFrame([return_dict])
+                            
+
+                            """START TEMP"""
+
+                            df_tickers.to_csv(f'df_tickers{coin_name}.csv', index=True)
+                            df.to_csv(f'return_dict{spread}.csv', index=True)
+
+                            """FINISH TEMP"""
+
 
                             return_str = (f"Біржи: {return_dict['pr_min_exchange']}\{return_dict['pr_max_exchange']}\n"
                                         f"Актив: {return_dict['coin']}\\USDT\n"
