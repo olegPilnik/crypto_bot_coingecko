@@ -1,9 +1,11 @@
-# from flask import Flask
-
-import pandas as pd
 from coingecko_api import get_data
 from coin_functions import sorting_coins
+from connect_db import add_profile_in_db, get_user_id
+
+import pandas as pd
 from time import sleep
+
+
 
 import telebot
 import threading
@@ -30,31 +32,32 @@ bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
 new_data = []
 
 
-# Отслеживаем подписанных пользователей
-subscribed_users = [] 
-
-# Отслеживаем подписанных пользователей
-subscribed_users = set()    
 
 # Обработчик команды /start telebot
 @bot.message_handler(commands=['start'])
 def subscribe(message):
-    # Добавляем пользователя в список подписанных
-    subscribed_users.add(message.chat.id)
-    bot.send_message(message.chat.id, "Ви підписались на повідомлення про нові данні.")
+    # Добавляем пользователя
+    user_id = message.from_user.id
+    user_name = message.from_user.username
+    full_name = message.from_user.full_name
+    """Записываем в базу профиль"""
+    try:
+        add_profile_in_db(user_id, user_name, full_name)
+    except Exception as ex: 
+        logging.info(f'{ex}: {user_id}')
+
+    bot.send_message(user_id, "Ви підписались на повідомлення про нові данні.")
     
-
-
-
+    
 
 def main():
     """Загружаем все монеты в DataFrame df_coins, 752 coin"""
     df_coins = pd.read_csv('coins_list_752.csv', index_col='num')
-    logging.info(f'В базе всего {len(df_coins)} coin')
+   
 
     """Загружаем все биржи в DataFrame df_exchanges, 12 exchange"""
     df_exchanges = pd.read_csv('exchanges_12.csv', index_col='num')
-    # logging.info(f'В базе всего {len(df_exchanges)} exchange')
+    
 
     while True:
         id_coin= 1
@@ -77,7 +80,7 @@ def main():
                                                 'volume',
                                                 'exchange',
                                                 'link_tickers'])
-            page = 1
+
             data = get_data(coin_id) # Получаем данные о монете с API coingecko
             if data is not None:
                 logging.info(f'COIN {coin_name} DATA is TRUE')
@@ -133,8 +136,8 @@ def main():
 
                             """START TEMP"""
 
-                            df_tickers.to_csv(f'df_tickers{coin_name}.csv', index=True)
-                            df.to_csv(f'return_dict{spread}.csv', index=True)
+                            # df_tickers.to_csv(f'df_tickers{coin_name}.csv', index=True)
+                            # df.to_csv(f'return_dict{spread}.csv', index=True, )
 
                             """FINISH TEMP"""
 
@@ -174,8 +177,10 @@ def send_data():
     while True:
         if new_data:
             data_to_send = new_data.pop(0)
-            for user_id in subscribed_users:
-                bot.send_message(user_id, str(data_to_send))
+            #  Открываем файл со списком пользователей
+            for element in get_user_id():
+                userid = element[0]
+                bot.send_message(userid, str(data_to_send))
         sleep(2)  # Пауза между проверками новых данных
 
 
