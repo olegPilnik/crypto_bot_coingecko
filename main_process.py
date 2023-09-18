@@ -1,17 +1,17 @@
+"""Главный модуль в котором происходит анализ
+ и подготовка данных к отправке пользователю"""
+
+from connect_db import get_row_count_table_coins, get_coin
+from connect_db import get_selected_exchanges
+
 from coingecko_api import get_data
+
 from coin_functions import sorting_coins
-from connect_db import add_profile_in_db, get_user_id
 
 import pandas as pd
+
 from time import sleep
 
-
-
-import telebot
-import threading
-
-from dotenv import load_dotenv
-import os
 
 import logging
 
@@ -23,55 +23,30 @@ logging.basicConfig(
 )
 
 
-load_dotenv('.env')
-
-TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
-
-bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
-
 new_data = []
 
-
-
-# Обработчик команды /start telebot
-@bot.message_handler(commands=['start'])
-def subscribe(message):
-    # Добавляем пользователя
-    user_id = message.from_user.id
-    user_name = message.from_user.username
-    full_name = message.from_user.full_name
-    """Записываем в базу профиль"""
+def main(stop=False, min_spread=1):
+    """Загружаем все 750 монет  из базы в список кортежей"""
     try:
-        add_profile_in_db(user_id, user_name, full_name)
-    except Exception as ex: 
-        logging.info(f'{ex}: {user_id}')
+        coins_count = get_row_count_table_coins()
+    except Exception as ex:
+        logging.info(f'При загрузке coins_count: {ex}')
 
-    bot.send_message(user_id, "Ви підписались на повідомлення про нові данні.")
-    
-    
+    while stop == False:
+        id_coin= 1       
 
-def main():
-    """Загружаем все монеты в DataFrame df_coins, 752 coin"""
-    df_coins = pd.read_csv('coins_list_752.csv', index_col='num')
-   
-
-    """Загружаем все биржи в DataFrame df_exchanges, 12 exchange"""
-    df_exchanges = pd.read_csv('exchanges_12.csv', index_col='num')
-    
-
-    while True:
-        id_coin= 1
-    
         """Проходим циклом по монетам"""
-        while id_coin <= len(df_coins): # перебираем индексы от 1 до последнего в базе с монетами (752)
-            coin_id = df_coins.loc[id_coin]['id'] #  записываем в переменную coin_id значение ключа id из списка
-            coin_name = df_coins.loc[id_coin]['name']        #  записываем в переменную coin_name значение ключа name из базы
-            coin_symbol = df_coins.loc[id_coin]['symbol']
-
+        while id_coin <= coins_count: # перебираем индексы от 1 до последнего в базе с монетами
+            try:
+                coin = get_coin(id_coin) # получаем coin из базы в виде кортежа (id, coin_id, symbol, name)
+            except Exception as ex:
+                logging.info(f'При загрузке coin: {ex}')
+            coin_id = coin[1] #  записываем в переменную coin_id значение id из кортежа
+            print(coin_id)
+            coin_name = coin[3] #  записываем в переменную coin_name значение name из базы
+            coin_symbol = coin[2].upper() # все заглавные
             
             logging.info(f'Проверяю монету # {id_coin} : {coin_name}')
-
-            exchange_id = df_exchanges.loc[1]['id']
 
             """ Создаем дата фрейм"""
             df_tickers = pd.DataFrame(columns=['coin_id',
@@ -84,11 +59,12 @@ def main():
             data = get_data(coin_id) # Получаем данные о монете с API coingecko
             if data is not None:
                 logging.info(f'COIN {coin_name} DATA is TRUE')
-
-                print(coin_name) #   !!!!!!!!!!!!!!!!!!!!!!!!!!
+                list_exchanges = get_selected_exchanges()
+                
                 """Преребираем строки DataFrame df_exchanges"""
-                for index, row in df_exchanges.iterrows():
-                    exchange_id = row['id']
+                for item in list_exchanges:
+                    exchange_id = item[0]
+                    exchange_name = item[1]
                     
                     """Сортируем данные в список словарей"""
                     lst_tickers = sorting_coins(data, coin_id, exchange_id)
@@ -104,7 +80,7 @@ def main():
                         price_max = df_tickers['price'].max()
                         spread = ((price_max - price_min)/ price_min) * 100
                         print(spread)
-                        if spread >= 8 and spread <= 30:
+                        if min_spread <= spread <= 30:
                             """Возвращаем в виде фреймов строки с 
                             "price" == price_max и "price" == price_min"""
                             df_min = df_tickers[df_tickers['price'] == price_min]
@@ -114,6 +90,7 @@ def main():
                             """Создаем словарь для возврата пользователю"""
                             return_dict = {}
                             return_dict['coin'] = coin_name
+                            return_dict['coin_symbol'] = coin_symbol
                             return_dict['target_coin'] = df_min.iloc[0]['target_coin_id']
                             return_dict['datetime'] = df_min.iloc[0]['datetime']
                             return_dict['pr_min_exchange'] = df_min.iloc[0]['exchange']
@@ -134,30 +111,32 @@ def main():
                             df = pd.DataFrame([return_dict])
                             
 
-                            """START TEMP"""
+            #                 """START TEMP"""
 
-                            # df_tickers.to_csv(f'df_tickers{coin_name}.csv', index=True)
-                            # df.to_csv(f'return_dict{spread}.csv', index=True, )
+            #                 # df_tickers.to_csv(f'df_tickers{coin_name}.csv', index=True)
+            #                 # df.to_csv(f'return_dict{spread}.csv', index=True, )
 
-                            """FINISH TEMP"""
+            #                 """FINISH TEMP"""
 
 
                             return_str = (f"Біржи: {return_dict['pr_min_exchange']}\{return_dict['pr_max_exchange']}\n"
-                                        f"Актив: {return_dict['coin']}\\USDT\n"
-                                        f"{return_dict['datetime']}\n"
-                                        "\n\n"
-                                        f"Об'єм: {return_dict['ex_min_volume']} --> {return_dict['ex_min_volume_usd']}$\n"
-                                        f"Ціна: {return_dict['price_min']} USDT\n"
-                                        f"Посилання: {return_dict['pr_min_link']}\n"
-                                        "\n\n"
-                                        f"Об'єм: {return_dict['ex_max_volume']} --> {return_dict['ex_max_volume_usd']}$\n"
-                                        f"Ціна: {return_dict['price_max']} USDT\n"
-                                        f"Посилання: {return_dict['pr_max_link']}\n"
-                                        "\n\n"
-                                        f"Спред: {return_dict['spread']}%")
+                                          f"Актив: {return_dict['coin']}({return_dict['coin_symbol']})\\USDT\n"
+                                          f"{return_dict['datetime']}\n"
+                                          "\n\n"
+                                          f"Об'єм: {return_dict['ex_min_volume']} --> {return_dict['ex_min_volume_usd']}$\n"
+                                          f"Ціна: {return_dict['price_min']} USDT\n"
+                                          f"Посилання: {return_dict['pr_min_link']}\n"
+                                          "\n\n"
+                                          f"Об'єм: {return_dict['ex_max_volume']} --> {return_dict['ex_max_volume_usd']}$\n"
+                                          f"Ціна: {return_dict['price_max']} USDT\n"
+                                          f"Посилання: {return_dict['pr_max_link']}\n"
+                                          "\n\n"
+                                          f"Спред: {return_dict['spread']}%")
                             
                             """Добавляем строку в список new_data"""
                             new_data.append(return_str)
+
+                                              
                         
                 else:
                     logging.info(f'COIN {coin_name} EMPTY lst_tickers')
@@ -166,33 +145,6 @@ def main():
                 print('Please wait 90 seconds')
                 logging.info(f'COIN {coin_name} DATA is FALSE')
                 sleep(90) # пауза в 90 секунд
-
-            id_coin += 1   # next coin
-       
-
-
-def send_data():
-    """Функция для отправки данных 
-    пользователям (не асинхронная)"""
-    while True:
-        if new_data:
-            data_to_send = new_data.pop(0)
-            #  Открываем файл со списком пользователей
-            for element in get_user_id():
-                userid = element[0]
-                bot.send_message(userid, str(data_to_send))
-        sleep(2)  # Пауза между проверками новых данных
-
-
-# Запуск бота в отдельном потоке
-def bot_polling():
-    bot.polling()
-
-# Запуск основных функций в отдельных потоках
-main_thread = threading.Thread(target=main)
-send_data_thread = threading.Thread(target=send_data)
-bot_thread = threading.Thread(target=bot_polling)
-
-main_thread.start()
-send_data_thread.start()
-bot_thread.start()
+            
+            id_coin += 1   # next coin 
+        

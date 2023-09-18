@@ -29,7 +29,6 @@ def get_current_time():
     return current_time
 
 
-
 def sorting_coins(data, coin_id, exchange_id):
     """Сортируем монеты по условию,
     пропускаем только с обьемом более 10000
@@ -76,9 +75,6 @@ def sorting_coins(data, coin_id, exchange_id):
                 pass
         else:
             pass      
-
-                
-
 
     return lst_tickers
 
